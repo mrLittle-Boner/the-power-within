@@ -1,5 +1,7 @@
 <template>
+  <main :class="$style.main">
   place for app
+  </main>
 </template>
 
 <script>
@@ -9,10 +11,8 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+<style module>
+.main {
+  color: var(--color-primary);
 }
 </style>

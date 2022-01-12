@@ -1,0 +1,32 @@
+/* @import './_variables.css'; */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+html {
+  font: 62.5% / 1.15 sans-serif;
+}
+button {
+  border: none;
+  color: inherit;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  font: inherit;
+}
+
+body {
+  font: 1.6rem/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #000;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
