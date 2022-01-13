@@ -1,4 +1,4 @@
-/* @import './_variables.css'; */
+
 *,
 *::before,
 *::after {
@@ -13,7 +13,6 @@ html {
   font: 62.5% / 1.15 sans-serif;
 }
 button {
-  border: none;
   color: inherit;
 }
 button,
@@ -22,11 +21,13 @@ optgroup,
 select,
 textarea {
   font: inherit;
+  border: none;
 }
+
 
 body {
   font: 1.6rem/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #000;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  background-color: rgba(255, 254, 251, 0.8);
 }
