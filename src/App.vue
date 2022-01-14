@@ -19,6 +19,7 @@ export default {
   display: flex;
   gap: var(--space-sm);
   padding: var(--space-lg);
+  position: relative;
 }
 .appContainer {
   max-width: 1440px;
@@ -27,4 +28,10 @@ export default {
   min-height: 100vh;
 }
 
+@media screen and (max-width: 1170px) {
+  .main {
+    padding-right:var(--space-sm);
+    padding-left:var(--space-sm);
+  }
+}
 </style>

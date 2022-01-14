@@ -49,4 +49,25 @@ export default {
     cursor: pointer;
     background-color: #FFFEFB;;
   }
+  
+  @media screen and (max-width: 1170px) {
+    .productsList {
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+  @media screen and (max-width: 830px) {
+    .productsList {
+      grid-template-columns: repeat(1, auto);
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .productsList {
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+  @media screen and (max-width: 535px) {
+    .productsList {
+      grid-template-columns: repeat(1, auto);
+    }
+  }
 </style>

@@ -105,5 +105,11 @@ export default {
     resize: none;
     height: 108px;
   }
-
+  @media screen and (max-width: 640px) {
+    .title,
+    .input,
+    .input::placeholder {
+      font-size: 1.6rem;
+    }
+  }
 </style>

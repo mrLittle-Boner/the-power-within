@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.wrapper">
+  <div :class="$style.wrapper" v-show="isOpen">
     <h3 :class="$style.heading">Добавление товара</h3>
     <form :class="$style.form">
       <AFormInput
@@ -13,11 +13,15 @@
       />
       <button :class="[$style.formBtn, $style[buttonClass]]" :disabled="!isActive">Добавить товар</button>
     </form>
+    <button @click="hideForm" :class="$style.mobileClose">+</button>
+    <teleport to='main'>
+      <button v-if="mobileView" @click="showForm" :class="$style.mobileFormShow">Добавление товара</button>
+    </teleport>
   </div>
 </template>
 
 <script>
-import { computed, reactive, toRef } from '@vue/reactivity'
+import { computed, reactive, ref, toRef } from '@vue/reactivity'
 import AFormInput from './AFormInput.vue'
 export default {
   name: 'AForm',
@@ -66,11 +70,36 @@ export default {
       }
     ]
 
+    const isOpen = ref(false)
+    const mobileView = ref(false)
+
+    function hideForm() {
+      isOpen.value = false
+    }
+    function showForm() {
+      isOpen.value = true
+    }
+
+    window.addEventListener('resize', () => {
+      if(window.innerWidth >= 640) {
+        isOpen.value = true
+        mobileView.value = false
+      }
+      if(window.innerWidth <= 640) {
+        isOpen.value = false
+        mobileView.value = true
+      }
+    })
+
     return {
       inputs,
       isActive,
       buttonClass,
-      formData
+      formData,
+      isOpen,
+      mobileView,
+      hideForm,
+      showForm
     }
   }
 }
@@ -116,5 +145,60 @@ export default {
     background-color: #eee;
     color: var(--color-grey);
     cursor: not-allowed;
+  }
+
+  .mobileClose {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    line-height: 1;
+    color: crimson;
+    font-weight: bold;
+    font-size: 3rem;
+    background: transparent;
+    transform: rotate(45deg);
+  }
+  .mobileFormShow {
+    position: fixed;
+    background-color: #7BAE73;
+    color: #fff;
+    border-radius: 15px 15px 0 0;
+    padding: 4px 8px;
+    transform: rotate(90deg);
+    left: -63px;
+    top: 40%;
+  }
+  
+  @media screen and (max-width: 950px) {
+    .wrapper {
+      width: 270px;
+    }
+    .form {
+      padding-right: var(--space-sm);
+      padding-left: var(--space-sm);
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .wrapper {
+      width: 100%;
+      position: fixed;
+      background-color: #fff;
+      z-index: 42;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      padding-top: var(--space-lg);
+    }
+    .form {
+      position: relative;
+      top: 0;
+      box-shadow: none;
+    }
+    .heading {
+      text-align: center;
+    }
+    .formBtn {
+      font-size: 1.8rem;
+    }
   }
 </style>
