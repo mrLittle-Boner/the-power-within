@@ -17,6 +17,7 @@ export default {
 <style module>
 .main {
   display: flex;
+  gap: var(--space-sm);
   padding: var(--space-lg);
 }
 .appContainer {

@@ -86,6 +86,7 @@ export default {
   }
   .wrapper {
     width: 332px;
+    flex-shrink: 0;
   }
   .heading {
     font-size: 28px;
@@ -96,6 +97,8 @@ export default {
     box-shadow: var(--shadow-product);
     padding: var(--space-m);
     border-radius: var(--radius-sm);
+    position: sticky;
+    top: var(--space-m);
   }
   .formBtn {
     width: 100%;
