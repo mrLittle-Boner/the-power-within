@@ -1,6 +1,16 @@
 :root{
-/* Colors */
+  /* Colors */
   --color-primary: #3F3F3F;
   --color-balck: #49485E;
   --color-grey: #B4B4B4;
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-lg: 10px;
+  /* Space */
+  --space-sm: 16px;
+  --space-m: 24px;
+  --space-lg: 32px;
+  /* Shadows */
+  --shadow-input: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  --shadow-product: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
 }
