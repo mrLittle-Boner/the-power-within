@@ -2,104 +2,131 @@
   <div :class="$style.wrapper" v-show="isOpen">
     <h3 :class="$style.heading">Добавление товара</h3>
     <form :class="$style.form">
-      <AFormInput
-        v-for="(input,index) in inputs" :key="index"
-        :class="$style.formInput"
-        :htmlTag="input.htmlTag"
-        :title="input.title"
-        :placeholder="input.placeholder"
-        :isRequired="input.isRequired"
-        v-model="input.model.value"
-      />
-      <button :class="[$style.formBtn, $style[buttonClass]]" :disabled="!isActive">Добавить товар</button>
+      <label :class="$style.label">
+        <span :class="[$style.title, $style.required]">Наименование товара</span>
+        <input 
+          type="text"
+          :class="[$style.input, $style.error]" 
+          placeholder="Введите наименование товара"
+          v-model="name"
+        >
+        <div v-if="isError" :class="$style.errorMessage">Поле является обязательным</div>
+      </label>
+
+      <label :class="$style.label">
+        <span :class="[$style.title, $style.required]">"Описание товара</span>
+        <textarea 
+          :class="[$style.input, $style.description]"
+          placeholder="Введите Описание товара"
+          v-model="description"
+        ></textarea>
+      </label>
+
+      <label :class="$style.label">
+        <span :class="[$style.title, $style.required]">Ссылка на изображение товара</span>
+        <input 
+          type="url"
+          :class="[$style.input, $style.error]" 
+          placeholder="Введите ссылку"
+          v-model="link"
+        >
+        <div v-if="isError" :class="$style.errorMessage">Поле является обязательным</div>
+      </label>
+
+      <label :class="$style.label">
+        <span :class="[$style.title, $style.required]">Цена товара</span>
+        <input 
+          type="number"
+          :class="[$style.input, $style.error]" 
+          placeholder="Введите цену"
+          v-model="price"
+        >
+        <div v-if="isError" :class="$style.errorMessage">Поле является обязательным</div>
+      </label>
+
+      <button :class="[$style.formBtn, isFromButtonActive ? $style.formBtnActive : $style.formBtnDisabled]" 
+        :disabled="!isFromButtonActive">
+        Добавить товар
+      </button>
+
     </form>
-    <button @click="hideForm" :class="$style.mobileClose">+</button>
-    <teleport to='main'>
-      <button v-if="mobileView" @click="showForm" :class="$style.mobileFormShow">Добавление товара</button>
+  
+    <button @click="isOpen = false" :class="$style.mobileClose">+</button>
+  
+    <teleport to='body'>
+      <button v-if="!isOpen" @click="isOpen = true" :class="$style.mobileFormShow">Добавление товара</button>
     </teleport>
+
   </div>
 </template>
 
 <script>
-import { computed, reactive, ref, toRef } from '@vue/reactivity'
-import AFormInput from './AFormInput.vue'
+import { computed, reactive, toRefs, ref } from '@vue/reactivity'
+
 export default {
   name: 'AForm',
-  components: { AFormInput },
   setup() {
-    const defaultFormData = {
+    const formData = reactive({
       name: '',
       description: '',
       link: '',
-      price: ''
-    }
-    const isActive = false
-    const buttonClass = computed(() => {
-      return isActive ? 'formBtn--active' : 'formBtn--disabled'
+      price: null
     })
-    
-    const formData = reactive(defaultFormData)
-    const inputs = [
-      {
-        htmlTag:'input',
-        title: 'Наименование Товара',
-        placeholder: 'Введите наименование товара',
-        model: toRef(formData, 'name'),
-        isRequired: true
-      },
-      {
-        htmlTag:'textarea',
-        title: 'Описание товара',
-        placeholder: 'Введите описание товара',
-        model: toRef(formData, 'description'),
-        isRequired: false
-      },
-      {
-        htmlTag:'input',
-        title: 'Ссылка на изображение товара',
-        placeholder: 'Введите ссылку',
-        model: toRef(formData, 'link'),
-        isRequired: true
-      },
-      {
-        htmlTag:'input',
-        title: 'Цена товара',
-        placeholder: 'Введите цену',
-        model: toRef(formData, 'price'),
-        isRequired: true
-      }
-    ]
 
-    const isOpen = ref(false)
-    const mobileView = ref(false)
+    const isFromButtonActive = computed(() => {
+      const { name, link, price } = formData
+      return Boolean(name && link && price)
+    })
 
-    function hideForm() {
-      isOpen.value = false
-    }
-    function showForm() {
-      isOpen.value = true
-    }
+    // const formStatus = ref(isFormStatusOpen)
+    // const isFormStatusOpen = computed(() => {
+    //   return window.innerWidth <= 640
+    // })
+
+    // let isOpen = computed({
+    //   get: () => {
+    //     return formStatus.value
+    //   },
+    //   set: (val) => {
+    //     isOpen = val
+    //   }
+    // })
+
+    // let mobileView = computed({
+    //   get: () => { 
+    //     return window.innerWidth <= 640
+    //   },
+    //   set: (val) => {
+    //     mobileView = val
+    //   }
+    // })
+
+    // function hideForm() {
+    //   isOpen = false
+    // }
+    // function showForm() {
+    //   isOpen = true
+    // }
+    const isOpen = ref(null)
+    window.innerWidth <= 640 ? isOpen.value = false : isOpen.value = true
 
     window.addEventListener('resize', () => {
       if(window.innerWidth >= 640) {
         isOpen.value = true
-        mobileView.value = false
       }
       if(window.innerWidth <= 640) {
         isOpen.value = false
-        mobileView.value = true
       }
     })
 
     return {
-      inputs,
-      isActive,
-      buttonClass,
-      formData,
+      ...toRefs(formData),
       isOpen,
-      mobileView,
-      hideForm,
-      showForm
+      // mobileView,
+      // hideForm,
+      // showForm,
+      isFromButtonActive,
+      // formStatus
     }
   }
 }
@@ -107,10 +134,10 @@ export default {
 
 
 <style module>
-  .formInput:not(:last-of-type) {
+  .form label:not(:last-of-type) {
     margin-bottom: var(--space-sm);
   }
-  .formInput:last-of-type {
+  .form label:last-of-type {
     margin-bottom: var(--space-m);
   }
   .wrapper {
@@ -136,12 +163,12 @@ export default {
     border-radius: var(--radius-lg);
     cursor: pointer;
   }
-  .formBtn--active {
+  .formBtnActive {
     background-color: #7BAE73;
     box-shadow: var(--shadow-input);
     color: #fff;
   }
-  .formBtn--disabled {
+  .formBtnDisabled {
     background-color: #eee;
     color: var(--color-grey);
     cursor: not-allowed;
@@ -200,5 +227,52 @@ export default {
     .formBtn {
       font-size: 1.8rem;
     }
+  }
+
+  .input {
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-input);
+    padding: 10px 16px 11px;
+    width: 100%;
+    border: none;
+    font-size: 1.2rem;
+  }
+  .input::placeholder {
+    font-size: 1.2rem;
+    color: var(--color-grey);
+  }
+  .error {
+    outline: 1px solid #FF8484;
+  }
+  .description {
+    resize: none;
+    height: 108px;
+    letter-spacing: -0.02em;
+  }
+    .label {  
+    width: 100%;
+    display: inline-block;
+    font-size: 0;
+  }
+  .title {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 1rem;
+    color: var(--color-black);
+    line-height: 13px;
+    position: relative;
+  }
+  .required::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background-color: #FF8484;
+    border-radius: var(--radius-sm);
+    position: absolute;
+  }
+  .errorMessage {
+    font-size: 0.8rem;
+    color: #FF8484;
+    margin-top: 4px;
   }
 </style>
