@@ -40,7 +40,7 @@
       <label :class="$style.label">
         <span :class="[$style.title, $style.required]">Цена товара</span>
         <input 
-          type="number"
+          type="text"
           :class="[$style.input, v$.price.$error && $style.error]" 
           placeholder="Введите цену"
           v-model.trim="price"
@@ -66,9 +66,10 @@
 </template>
 
 <script>
-import { computed, reactive, toRefs, ref } from '@vue/reactivity'
+import { computed, reactive, toRefs, ref, toRef } from '@vue/reactivity'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { watch } from '@vue/runtime-core'
 
 export default {
   name: 'AForm',
@@ -77,7 +78,7 @@ export default {
       name: '',
       description: '',
       link: '',
-      price: null
+      price: ''
     })
 
     const rules = {
@@ -105,6 +106,11 @@ export default {
       }
     })
 
+    watch(() => toRef(formData, 'price') , (newValue) => {
+      const seperated = newValue.value.replace(/\D/g, "").replace(/(\d)(?=(?:\d{3})+\b)/gm, `$1 `)
+      formData.price = seperated
+    })
+
     return {
       ...toRefs(formData),
       isOpen,
@@ -114,7 +120,6 @@ export default {
   }
 }
 </script>
-
 
 <style module>
   .form label:not(:last-of-type) {
