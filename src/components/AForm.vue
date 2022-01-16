@@ -6,11 +6,13 @@
         <span :class="[$style.title, $style.required]">Наименование товара</span>
         <input 
           type="text"
-          :class="[$style.input, $style.error]" 
+          :class="[$style.input, v$.name.$error && $style.error]" 
           placeholder="Введите наименование товара"
-          v-model="name"
+          v-model.trim="name"
+          @blur="v$.name.$touch"
+          required
         >
-        <div v-if="isError" :class="$style.errorMessage">Поле является обязательным</div>
+        <div v-if="v$.name.$error" :class="$style.errorMessage">Поле является обязательным</div>
       </label>
 
       <label :class="$style.label">
@@ -26,29 +28,32 @@
         <span :class="[$style.title, $style.required]">Ссылка на изображение товара</span>
         <input 
           type="url"
-          :class="[$style.input, $style.error]" 
+          :class="[$style.input, v$.link.$error && $style.error]" 
           placeholder="Введите ссылку"
-          v-model="link"
+          v-model.trim="link"
+          @blur="v$.link.$touch"
+          required
         >
-        <div v-if="isError" :class="$style.errorMessage">Поле является обязательным</div>
+        <div v-if="v$.link.$error" :class="$style.errorMessage">Поле является обязательным</div>
       </label>
 
       <label :class="$style.label">
         <span :class="[$style.title, $style.required]">Цена товара</span>
         <input 
           type="number"
-          :class="[$style.input, $style.error]" 
+          :class="[$style.input, v$.price.$error && $style.error]" 
           placeholder="Введите цену"
-          v-model="price"
+          v-model.trim="price"
+          @blur="v$.price.$touch"
+          required
         >
-        <div v-if="isError" :class="$style.errorMessage">Поле является обязательным</div>
+        <div v-if="v$.price.$error" :class="$style.errorMessage">Поле является обязательным</div>
       </label>
 
       <button :class="[$style.formBtn, isFromButtonActive ? $style.formBtnActive : $style.formBtnDisabled]" 
         :disabled="!isFromButtonActive">
         Добавить товар
       </button>
-
     </form>
   
     <button @click="isOpen = false" :class="$style.mobileClose">+</button>
@@ -62,6 +67,8 @@
 
 <script>
 import { computed, reactive, toRefs, ref } from '@vue/reactivity'
+import useVuelidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
 export default {
   name: 'AForm',
@@ -73,40 +80,19 @@ export default {
       price: null
     })
 
+    const rules = {
+      name: { required },
+      link: { required },
+      price: { required }
+    }
+
+    const v$ = useVuelidate(rules, formData)
+
     const isFromButtonActive = computed(() => {
       const { name, link, price } = formData
-      return Boolean(name && link && price)
+      return Boolean(name && link && price) && v$.value.$errors.length === 0
     })
 
-    // const formStatus = ref(isFormStatusOpen)
-    // const isFormStatusOpen = computed(() => {
-    //   return window.innerWidth <= 640
-    // })
-
-    // let isOpen = computed({
-    //   get: () => {
-    //     return formStatus.value
-    //   },
-    //   set: (val) => {
-    //     isOpen = val
-    //   }
-    // })
-
-    // let mobileView = computed({
-    //   get: () => { 
-    //     return window.innerWidth <= 640
-    //   },
-    //   set: (val) => {
-    //     mobileView = val
-    //   }
-    // })
-
-    // function hideForm() {
-    //   isOpen = false
-    // }
-    // function showForm() {
-    //   isOpen = true
-    // }
     const isOpen = ref(null)
     window.innerWidth <= 640 ? isOpen.value = false : isOpen.value = true
 
@@ -122,11 +108,8 @@ export default {
     return {
       ...toRefs(formData),
       isOpen,
-      // mobileView,
-      // hideForm,
-      // showForm,
+      v$,
       isFromButtonActive,
-      // formStatus
     }
   }
 }
