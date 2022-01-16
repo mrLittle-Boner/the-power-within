@@ -7,15 +7,7 @@
       </button>
     </div>
     <div :class="$style.productsList">
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
+      <AProductsCard v-for="item in list" :key="item.id" :productInfo="item"/>
     </div>
   </div>
 </template>
@@ -24,7 +16,13 @@
 import AProductsCard from './AProductsCard.vue'
 export default {
   name: 'AProducts',
-  components: { AProductsCard }
+  components: { AProductsCard },
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 

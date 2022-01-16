@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.wrapper" v-show="isOpen">
     <h3 :class="$style.heading">Добавление товара</h3>
-    <form :class="$style.form">
+    <form @submit.prevent="submitHandler" :class="$style.form">
       <label :class="$style.label">
         <span :class="[$style.title, $style.required]">Наименование товара</span>
         <input 
@@ -73,7 +73,8 @@ import { watch } from '@vue/runtime-core'
 
 export default {
   name: 'AForm',
-  setup() {
+  emits: ['addProduct'],
+  setup(props , {emit}) {
     const formData = reactive({
       name: '',
       description: '',
@@ -111,11 +112,30 @@ export default {
       formData.price = seperated
     })
 
+    function createNewProduct() {
+      const id = "id" + Math.random().toString(16).slice(2)
+      const {name, description, link, price} = formData
+      return { id, name, description, link, price }
+    }
+
+    function clearForm() {
+      formData.name = ''
+      formData.description = ''
+      formData.link = ''
+      formData.price = ''
+    }
+
+    function submitHandler() {
+      emit('addProduct', createNewProduct())
+      clearForm()
+    }
+
     return {
       ...toRefs(formData),
       isOpen,
       v$,
       isFromButtonActive,
+      submitHandler
     }
   }
 }
