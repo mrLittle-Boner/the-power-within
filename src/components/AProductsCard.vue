@@ -8,7 +8,7 @@
       <p :class="$style.description"> {{ productInfo.description }}</p>
       <div :class="$style.price">{{ productInfo.price }} руб.</div>
     </div>
-    <button v-if="isSelected" :class="$style.deleteBtn">
+    <button v-if="isSelected" :class="$style.deleteBtn" @click="$emit('delete', productInfo.id)">
       <img src="@/assets/images/delete-btn.png" alt="delete item from the list">
     </button>
   </div>
@@ -18,6 +18,7 @@
 import { ref } from '@vue/reactivity'
 export default {
   name: 'AProductsCard',
+  emits: ['delete'],
   props: {
     productInfo: {
       type: Object,
@@ -46,7 +47,8 @@ export default {
   cursor: pointer;
   position: relative;
   border-radius: var(--radius-sm);
-  transition: all .3s ease;
+  background-color: rgba(255, 254, 251, 1);
+  transition: all .5s ease-in-out;
 }
 .selected {
   outline: 1px solid #7BAE73;

@@ -55,7 +55,6 @@
         Добавить товар
       </button>
       <transition
-        name="custom-classes-transition"
         enter-active-class="animate__animated animate__flipInY"
         leave-active-class="animate__animated animate__flipOutY"
       >
