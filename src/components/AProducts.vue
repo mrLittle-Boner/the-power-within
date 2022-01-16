@@ -7,15 +7,12 @@
       </button>
     </div>
     <div :class="$style.productsList">
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
-      <AProductsCard />
+      <transition-group
+        enter-active-class="animate__animated animate__slideInDown"
+        leave-active-class="animate__animated animate__slideOutUp"
+      >
+        <AProductsCard v-for="item in list" :key="item.id" :productInfo="item"/>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -24,7 +21,13 @@
 import AProductsCard from './AProductsCard.vue'
 export default {
   name: 'AProducts',
-  components: { AProductsCard }
+  components: { AProductsCard },
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 

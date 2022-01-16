@@ -1,12 +1,12 @@
 <template>
   <div :class="[$style.card, isSelected && $style.selected]" @click="toggleSelect">
     <div :class="$style.imageWrapper">
-      <img :class="$style.image" src="@/assets/images/product-photo.jpg" alt="photo of the product">
+      <img :class="$style.image" :src="productInfo.link" alt="photo of the product">
     </div>
     <div :class="$style.info">
-      <h3 :class="$style.title">Наименование товара</h3>
-      <p :class="$style.description"> Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк</p>
-      <div :class="$style.price">10 000 руб.</div>
+      <h3 :class="$style.title">{{ productInfo.name }}</h3>
+      <p :class="$style.description"> {{ productInfo.description }}</p>
+      <div :class="$style.price">{{ productInfo.price }} руб.</div>
     </div>
     <button v-if="isSelected" :class="$style.deleteBtn">
       <img src="@/assets/images/delete-btn.png" alt="delete item from the list">
@@ -18,6 +18,12 @@
 import { ref } from '@vue/reactivity'
 export default {
   name: 'AProductsCard',
+  props: {
+    productInfo: {
+      type: Object,
+      required: true
+    }
+  },
   setup(){
     const isSelected = ref(false)
 
