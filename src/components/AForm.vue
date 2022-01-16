@@ -67,7 +67,7 @@
       </transition>
     </form>
   
-    <button @click="isOpen = false" :class="$style.mobileClose">+</button>
+    <button v-if="mobileCloseBtn && isOpen" @click="isOpen = false" :class="$style.mobileClose">+</button>
   
     <teleport to='body'>
       <button v-if="!isOpen" @click="isOpen = true" :class="$style.mobileFormShow">Добавление товара</button>
@@ -108,15 +108,25 @@ export default {
       return Boolean(name && link && price) && v$.value.$errors.length === 0
     })
 
+    const mobileCloseBtn = ref(null)
     const isOpen = ref(null)
-    window.innerWidth <= 640 ? isOpen.value = false : isOpen.value = true
+
+    if(window.innerWidth <= 640) {
+      mobileCloseBtn.value = true
+      isOpen.value = false
+    } else {
+      mobileCloseBtn.value = false
+      isOpen.value = true
+    }
 
     window.addEventListener('resize', () => {
       if(window.innerWidth >= 640) {
         isOpen.value = true
+        mobileCloseBtn.value = false
       }
       if(window.innerWidth <= 640) {
         isOpen.value = false
+        mobileCloseBtn.value = true
       }
     })
 
@@ -146,8 +156,8 @@ export default {
 
     function submitHandler() {
       emit('addProduct', createNewProduct())
-      clearForm()
       productAdded.value = true
+      clearForm()
       confirmAdding()
       v$.value.$reset()
     }
@@ -158,7 +168,8 @@ export default {
       v$,
       isFromButtonActive,
       submitHandler,
-      productAdded
+      productAdded,
+      mobileCloseBtn
     }
   }
 }
