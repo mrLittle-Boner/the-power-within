@@ -16,7 +16,7 @@
       </label>
 
       <label :class="$style.label">
-        <span :class="[$style.title, $style.required]">"Описание товара</span>
+        <span :class="[$style.title]">Описание товара</span>
         <textarea 
           :class="[$style.input, $style.description]"
           placeholder="Введите Описание товара"
@@ -54,6 +54,17 @@
         :disabled="!isFromButtonActive">
         Добавить товар
       </button>
+      <transition
+        name="custom-classes-transition"
+        enter-active-class="animate__animated animate__flipInY"
+        leave-active-class="animate__animated animate__flipOutY"
+      >
+        <div v-if="productAdded" :class="$style.success">
+          <span><img src="@/assets/images/done-img.png" /></span>
+          <span>Готово!</span>
+          <span>Товар успешно добавлен!</span>
+        </div>
+      </transition>
     </form>
   
     <button @click="isOpen = false" :class="$style.mobileClose">+</button>
@@ -81,6 +92,8 @@ export default {
       link: '',
       price: ''
     })
+
+    const productAdded = ref(false)
 
     const rules = {
       name: { required },
@@ -112,6 +125,12 @@ export default {
       formData.price = seperated
     })
 
+    function confirmAdding() {
+      setTimeout(() => {
+        productAdded.value = false
+      },3800)
+    }
+
     function createNewProduct() {
       const id = "id" + Math.random().toString(16).slice(2)
       const {name, description, link, price} = formData
@@ -128,6 +147,9 @@ export default {
     function submitHandler() {
       emit('addProduct', createNewProduct())
       clearForm()
+      productAdded.value = true
+      confirmAdding()
+      v$.value.$reset()
     }
 
     return {
@@ -135,13 +157,29 @@ export default {
       isOpen,
       v$,
       isFromButtonActive,
-      submitHandler
+      submitHandler,
+      productAdded
     }
   }
 }
 </script>
 
 <style module>
+  .success {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background-color: #fff;
+    z-index: 43;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+  }
+  .success img {
+    width: 74px;
+    height: 74px;
+  }
   .form label:not(:last-of-type) {
     margin-bottom: var(--space-sm);
   }
@@ -203,40 +241,6 @@ export default {
     left: -63px;
     top: 40%;
   }
-  
-  @media screen and (max-width: 950px) {
-    .wrapper {
-      width: 270px;
-    }
-    .form {
-      padding-right: var(--space-sm);
-      padding-left: var(--space-sm);
-    }
-  }
-  @media screen and (max-width: 640px) {
-    .wrapper {
-      width: 100%;
-      position: fixed;
-      background-color: #fff;
-      z-index: 42;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      padding-top: var(--space-lg);
-    }
-    .form {
-      position: relative;
-      top: 0;
-      box-shadow: none;
-    }
-    .heading {
-      text-align: center;
-    }
-    .formBtn {
-      font-size: 1.8rem;
-    }
-  }
-
   .input {
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-input);
@@ -282,5 +286,38 @@ export default {
     font-size: 0.8rem;
     color: #FF8484;
     margin-top: 4px;
+  }
+  
+  @media screen and (max-width: 950px) {
+    .wrapper {
+      width: 270px;
+    }
+    .form {
+      padding-right: var(--space-sm);
+      padding-left: var(--space-sm);
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .wrapper {
+      width: 100%;
+      position: fixed;
+      background-color: #fff;
+      z-index: 42;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      padding-top: var(--space-lg);
+    }
+    .form {
+      position: relative;
+      top: 0;
+      box-shadow: none;
+    }
+    .heading {
+      text-align: center;
+    }
+    .formBtn {
+      font-size: 1.8rem;
+    }
   }
 </style>

@@ -7,7 +7,12 @@
       </button>
     </div>
     <div :class="$style.productsList">
-      <AProductsCard v-for="item in list" :key="item.id" :productInfo="item"/>
+      <transition-group
+        enter-active-class="animate__animated animate__slideInDown"
+        leave-active-class="animate__animated animate__slideOutUp"
+      >
+        <AProductsCard v-for="item in list" :key="item.id" :productInfo="item"/>
+      </transition-group>
     </div>
   </div>
 </template>
