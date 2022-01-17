@@ -2,11 +2,11 @@
   <div :class="$style.products">
     <div :style="{'display':'flex'}">
       <div :class="$style.sortBtn" @click="sortOptionsOpen = true">
-        <div>По умолчанию <img :style="{'marginLeft': '2px'}" src="@/assets/images/arrow.png"></div>
+        <div>{{sortingTitle}} <img :style="{'marginLeft': '2px'}" src="@/assets/images/arrow.png"></div>
         <ul :class="$style.sortList" v-if="sortOptionsOpen" @click.stop="sortOptionsOpen = false">
-          <li :class="$style.sortOption" @click="$emit('sortProducts', 'priceMin')">По цене(вниз)</li>
-          <li :class="$style.sortOption" @click="$emit('sortProducts', 'priceMax')">По цене(вверх)</li>
-          <li :class="$style.sortOption" @click="$emit('sortProducts', 'name')">По наименованию</li>
+          <li :class="$style.sortOption" @click="$emit('changeSort', 'priceMin')">По цене(вниз)</li>
+          <li :class="$style.sortOption" @click="$emit('changeSort', 'priceMax')">По цене(вверх)</li>
+          <li :class="$style.sortOption" @click="$emit('changeSort', 'name')">По наименованию</li>
         </ul>
       </div>
       <div v-if="sortOptionsOpen" :class="$style.sortOpenBg" @click="sortOptionsOpen = false"></div>
@@ -16,32 +16,38 @@
         enter-active-class="animate__animated animate__slideInDown"
         leave-active-class="animate__animated animate__slideOutUp"
       >
-        <AProductsCard v-for="item in list" :key="item.id" :productInfo="item" @delete="deleteOneProduct"/>
+        <AProductsCard v-for="item in list" :key="item.id" :productInfo="item" @delete="$emit('deleteProduct', item.id)"/>
       </transition-group>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import AProductsCard from './AProductsCard.vue'
 export default {
   name: 'AProducts',
   components: { AProductsCard },
-  emits: ['deleteProduct', 'sortProducts', 'listLoaded'],
+  emits: ['deleteProduct', 'listLoaded', 'changeSort'],
   props: {
     list: {
       type: Array,
       required: true
+    },
+    sorting: {
+      type: String
     }
   },
-  setup(props, { emit }) {
-    function deleteOneProduct(id) {
-      emit('deleteProduct', id)
-    }
+  setup(props) {
     let sortOptionsOpen = ref(false)
+    let sortingTitle = computed(() => {
+      if(props.sorting === 'priceMax') return 'По ценe(вниз)'
+      if(props.sorting === 'priceMin') return 'По ценe(вверх)'
+      if(props.sorting === 'name') return 'По наименованию'
+      return 'По умолчанию'
+    })
 
-    return { deleteOneProduct, sortOptionsOpen }
+    return { sortOptionsOpen, sortingTitle }
   }
 }
 </script>

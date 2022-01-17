@@ -8,7 +8,7 @@
       <p :class="$style.description"> {{ productInfo.description }}</p>
       <div :class="$style.price">{{ productInfo.price }} руб.</div>
     </div>
-    <button v-if="isSelected" :class="$style.deleteBtn" @click="$emit('delete', productInfo.id)">
+    <button v-if="isSelected" :class="$style.deleteBtn" @click="$emit('delete')">
       <img src="@/assets/images/delete-btn.png" alt="delete item from the list">
     </button>
   </div>
@@ -49,6 +49,9 @@ export default {
   border-radius: var(--radius-sm);
   background-color: rgba(255, 254, 251, 1);
   transition: all .5s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
 }
 .selected {
   outline: 1px solid #7BAE73;
@@ -70,6 +73,11 @@ export default {
 .info {
   padding: var(--space-sm);
   padding-bottom: var(--space-m);
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .title {
   font-size: 2rem;

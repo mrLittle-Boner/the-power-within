@@ -85,30 +85,25 @@ export default {
   name: 'AForm',
   emits: ['addProduct'],
   setup(props , {emit}) {
+    const productAdded = ref(false)
+    const mobileCloseBtn = ref(null)
+    const isOpen = ref(null)
     const formData = reactive({
       name: '',
       description: '',
       link: '',
       price: ''
     })
-
-    const productAdded = ref(false)
-
     const rules = {
       name: { required },
       link: { required },
       price: { required }
     }
-
     const v$ = useVuelidate(rules, formData)
-
     const isFromButtonActive = computed(() => {
       const { name, link, price } = formData
       return Boolean(name && link && price) && v$.value.$errors.length === 0
     })
-
-    const mobileCloseBtn = ref(null)
-    const isOpen = ref(null)
 
     if(window.innerWidth <= 640) {
       mobileCloseBtn.value = true
